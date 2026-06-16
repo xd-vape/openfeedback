@@ -310,14 +310,6 @@ git push origin feature/neue-funktion
 
 6. Pull Request erstellen
 
-## Lizenz
-
-Aktuell ist keine Lizenz angegeben.
-
-Falls das Projekt öffentlich genutzt oder von anderen weiterverwendet werden soll, empfiehlt sich eine passende Open-Source-Lizenz, zum Beispiel die MIT-Lizenz.
-
 ## Autor
-
-Erstellt von **Mehdi Sevim**.
 
 GitHub: [@xd-vape](https://github.com/xd-vape)
