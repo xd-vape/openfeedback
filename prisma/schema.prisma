@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum FeedbackStatus {
+  OPEN
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+}
+
+model User {
+  id            String         @id
+  name          String
+  email         String
+  emailVerified Boolean        @default(false)
+  image         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  
+  boards        Board[]
+  feedbackPosts FeedbackPost[]
+  votes         Vote[]
+  comments      Comment[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Board {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  isPublic    Boolean @default(true)
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  posts    FeedbackPost[]
+  settings BoardSettings?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@map("board")
+}
+
+model BoardSettings {
+  id String @id @default(cuid())
+
+  boardId String @unique
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  allowGuestFeedback Boolean @default(true)
+  allowComments      Boolean @default(true)
+  requireApproval    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("board_settings")
+}
+
+model FeedbackPost {
+  id          String         @id @default(cuid())
+  title       String
+  description String
+  status      FeedbackStatus @default(OPEN)
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  guestName  String?
+  guestEmail String?
+
+  votes    Vote[]
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([boardId])
+  @@index([authorId])
+  @@index([status])
+  @@map("feedback_post")
+}
+
+model Vote {
+  id String @id @default(cuid())
+
+  postId String
+  post   FeedbackPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  visitorId String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@unique([postId, visitorId])
+  @@index([postId])
+  @@index([userId])
+  @@index([visitorId])
+  @@map("vote")
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content String
+
+  postId String
+  post   FeedbackPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  guestName String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+  @@map("comment")
+}
