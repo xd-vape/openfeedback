@@ -1,36 +1,323 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# OpenFeedback
 
-## Getting Started
+OpenFeedback ist eine moderne Feedback-Plattform, mit der Nutzer Feedback, Ideen und Verbesserungsvorschläge einfach einreichen können.
 
-First, run the development server:
+Das Projekt basiert auf **Next.js**, **Prisma**, **PostgreSQL** und **Better Auth**.
+
+## Überblick
+
+OpenFeedback soll dabei helfen, Feedback strukturiert zu sammeln, zu verwalten und später auszuwerten.
+
+Die Anwendung kann zum Beispiel für folgende Zwecke genutzt werden:
+
+- Produktfeedback
+- Webseiten-Feedback
+- Feature Requests
+- Bug Reports
+- Interne Tools
+- SaaS-Projekte
+- Community-Plattformen
+
+## Tech Stack
+
+- **Next.js** – React Framework für Frontend, Routing und Backend-Funktionen
+- **React** – Bibliothek für Benutzeroberflächen
+- **TypeScript** – typsichere Entwicklung
+- **Prisma** – ORM für Datenbankzugriffe
+- **PostgreSQL** – relationale Datenbank
+- **Better Auth** – Authentifizierung und Session-Management
+- **Tailwind CSS** – Utility-first CSS Framework
+- **shadcn/ui** – moderne UI-Komponenten
+- **Radix UI** – barrierearme UI-Primitives
+- **Zod** – Validierung von Eingaben
+- **React Hook Form** – Formularverwaltung
+
+## Funktionen
+
+- Feedback einreichen
+- Feedback verwalten
+- Nutzerregistrierung und Login
+- Authentifizierung mit Better Auth
+- Speicherung der Daten in PostgreSQL
+- Datenbankzugriff über Prisma
+- Moderne Benutzeroberfläche mit Tailwind CSS und shadcn/ui
+- Formularvalidierung mit Zod
+- Erweiterbare Projektstruktur
+
+## Voraussetzungen
+
+Bevor du das Projekt startest, solltest du Folgendes installiert haben:
+
+- Node.js
+- npm, pnpm, yarn oder bun
+- PostgreSQL
+- Git
+
+## Installation
+
+Repository klonen:
+
+```bash
+git clone https://github.com/xd-vape/openfeedback.git
+cd openfeedback
+```
+
+Abhängigkeiten installieren:
+
+```bash
+npm install
+```
+
+## Umgebungsvariablen
+
+Erstelle im Hauptverzeichnis eine Datei mit dem Namen `.env`.
+
+Beispiel:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/openfeedback"
+
+BETTER_AUTH_SECRET="DEIN_SECRET"
+BETTER_AUTH_URL="http://localhost:3000"
+```
+
+Passe die Werte an deine lokale Umgebung an.
+
+### DATABASE_URL
+
+Die `DATABASE_URL` verbindet Prisma mit deiner PostgreSQL-Datenbank.
+
+Beispiel-Aufbau:
+
+```txt
+postgresql://BENUTZERNAME:PASSWORT@HOST:PORT/DATENBANKNAME
+```
+
+### BETTER_AUTH_SECRET
+
+`BETTER_AUTH_SECRET` wird von Better Auth verwendet, um sicherheitsrelevante Daten zu signieren.
+
+Für die lokale Entwicklung kannst du einen eigenen zufälligen Wert verwenden.
+
+### BETTER_AUTH_URL
+
+`BETTER_AUTH_URL` enthält die Basis-URL deiner Anwendung.
+
+Lokal ist das meistens:
+
+```txt
+http://localhost:3000
+```
+
+In Produktion muss hier deine echte Domain eingetragen werden.
+
+## Datenbank einrichten
+
+Prisma Client generieren:
+
+```bash
+npx prisma generate
+```
+
+Migrationen ausführen:
+
+```bash
+npx prisma migrate dev
+```
+
+Optional kannst du Prisma Studio öffnen:
+
+```bash
+npx prisma studio
+```
+
+Damit kannst du deine Datenbank visuell ansehen und bearbeiten.
+
+## Entwicklungsserver starten
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Die Anwendung ist danach erreichbar unter:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Verfügbare Scripts
 
-## Learn More
+### Entwicklungsserver starten
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Startet die Anwendung im Entwicklungsmodus.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Produktions-Build erstellen
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Erstellt eine optimierte Produktionsversion der Anwendung.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Produktionsserver starten
+
+```bash
+npm run start
+```
+
+Startet die zuvor gebaute Produktionsversion.
+
+### Linting ausführen
+
+```bash
+npm run lint
+```
+
+Prüft den Code auf mögliche Fehler und Stilprobleme.
+
+## Projektstruktur
+
+Eine mögliche Projektstruktur sieht so aus:
+
+```txt
+openfeedback/
+├── app/
+│   ├── api/
+│   ├── auth/
+│   ├── dashboard/
+│   └── page.tsx
+├── components/
+│   └── ui/
+├── lib/
+│   ├── auth.ts
+│   ├── prisma.ts
+│   └── utils.ts
+├── prisma/
+│   └── schema.prisma
+├── public/
+├── .env
+├── package.json
+└── README.md
+```
+
+## Authentifizierung
+
+OpenFeedback verwendet **Better Auth** für die Authentifizierung.
+
+Damit können unter anderem folgende Funktionen umgesetzt werden:
+
+- Registrierung
+- Login
+- Logout
+- Session-Verwaltung
+- geschützte Bereiche
+- Benutzerverwaltung
+
+Die Authentifizierung kann mit Prisma verbunden werden, sodass Benutzer- und Sessiondaten in PostgreSQL gespeichert werden.
+
+## Datenbank
+
+Die Datenbank wird mit **Prisma** verwaltet.
+
+Das Prisma-Schema befindet sich normalerweise unter:
+
+```txt
+prisma/schema.prisma
+```
+
+Nach Änderungen am Datenbankschema sollte eine neue Migration erstellt werden:
+
+```bash
+npx prisma migrate dev
+```
+
+Danach sollte der Prisma Client neu generiert werden:
+
+```bash
+npx prisma generate
+```
+
+## Deployment
+
+Das Projekt kann zum Beispiel auf **Vercel** deployed werden.
+
+Für das Deployment müssen die Umgebungsvariablen in der Hosting-Plattform gesetzt werden:
+
+```env
+DATABASE_URL="..."
+BETTER_AUTH_SECRET="..."
+BETTER_AUTH_URL="..."
+```
+
+Wichtig:
+
+- `DATABASE_URL` muss auf die produktive PostgreSQL-Datenbank zeigen
+- `BETTER_AUTH_SECRET` sollte ein sicherer zufälliger Wert sein
+- `BETTER_AUTH_URL` muss auf die Produktionsdomain zeigen
+- Prisma-Migrationen müssen für die Produktionsdatenbank ausgeführt werden
+
+Vor dem Deployment kann lokal geprüft werden, ob der Build funktioniert:
+
+```bash
+npm run build
+```
+
+## Geplante Erweiterungen
+
+Mögliche zukünftige Funktionen:
+
+- Feedback-Dashboard
+- Kategorien für Feedback
+- Upvotes für Feedback
+- Kommentare zu Feedback
+- Admin-Bereich
+- Benutzerrollen
+- Status für Feedback-Einträge
+- Suchfunktion
+- Filterfunktion
+- Benachrichtigungen
+- Öffentliche Roadmap
+
+## Mitwirken
+
+Beiträge sind willkommen.
+
+So kannst du mitwirken:
+
+1. Repository forken
+2. Neuen Branch erstellen
+
+```bash
+git checkout -b feature/neue-funktion
+```
+
+3. Änderungen vornehmen
+4. Änderungen committen
+
+```bash
+git commit -m "Neue Funktion hinzugefügt"
+```
+
+5. Branch pushen
+
+```bash
+git push origin feature/neue-funktion
+```
+
+6. Pull Request erstellen
+
+## Lizenz
+
+Aktuell ist keine Lizenz angegeben.
+
+Falls das Projekt öffentlich genutzt oder von anderen weiterverwendet werden soll, empfiehlt sich eine passende Open-Source-Lizenz, zum Beispiel die MIT-Lizenz.
+
+## Autor
+
+Erstellt von **Mehdi Sevim**.
+
+GitHub: [@xd-vape](https://github.com/xd-vape)
